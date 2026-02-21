@@ -141,12 +141,14 @@
 </div>
 
 <script>
-
 const firebaseConfig = {
-    apiKey:"YOUR_API_KEY",
-    authDomain:"YOUR_DOMAIN",
-    databaseURL:"YOUR_DB_URL",
-    projectId:"YOUR_PROJECT_ID"
+  apiKey: "AIzaSyCrWG5PZpMSEGhmqoFJofmECCSnN8uMYc",
+  authDomain: "youssef-ameni-game.firebaseapp.com",
+  databaseURL: "https://youssef-ameni-game-default-rtdb.firebaseio.com",
+  projectId: "youssef-ameni-game",
+  storageBucket: "youssef-ameni-game.firebasestorage.app",
+  messagingSenderId: "238776242009",
+  appId: "1:238776242009:web:a34003b6e60f1d1e0ec648"
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -158,7 +160,7 @@ let currentPlayer=null;
 
 database.ref(".info/connected").on("value",(snap)=>{
     document.getElementById("connectionStatus").innerHTML =
-        snap.val() ? "Connected" : "Connecting...";
+        snap.val() ? "✅ Connected" : "❌ Connecting...";
 });
 
 gameRef.on("value",(snapshot)=>{
@@ -171,7 +173,7 @@ function setPlayer(player){
     document.getElementById("playerScreen").classList.add("hidden");
     document.getElementById("gameScreen").classList.remove("hidden");
     document.getElementById("playerName").innerHTML=
-        player==="youssef"?"Youssef":"Ameni";
+        player==="youssef"?"👨 YOUSSEF":"👩 AMENI";
 
     gameRef.once("value",(snap)=>{
         if(!snap.val()){
@@ -188,7 +190,7 @@ function setPlayer(player){
 
 function lockNumber(){
     const num=parseInt(document.getElementById("secretNumber").value);
-    if(num<1||num>100) return alert("Number must be 1-100");
+    if(num<1||num>100) return alert("❌ Number must be 1-100");
 
     let updates={};
     updates[currentPlayer+"/locked"]=true;
@@ -199,7 +201,7 @@ function lockNumber(){
 
 function makeGuess(){
     const guess=parseInt(document.getElementById("guessNumber").value);
-    if(guess<1||guess>100) return alert("Number must be 1-100");
+    if(guess<1||guess>100) return alert("❌ Number must be 1-100");
 
     gameRef.once("value",(snap)=>{
         const game=snap.val();
@@ -264,19 +266,30 @@ function updateUI(game){
         "Guess Youssef's number";
 
     if(game.winner){
-        document.getElementById("turnDisplay").innerHTML="GAME OVER";
+        document.getElementById("turnDisplay").innerHTML="🏆 GAME OVER 🏆";
         document.getElementById("guessBtn").disabled=true;
-        winnerDisplay.innerHTML=game.winner+" WINS!";
+        winnerDisplay.innerHTML=game.winner==="youssef"?"🏆 YOUSSEF WINS! 🏆":"🏆 AMENI WINS! 🏆";
         winnerDisplay.classList.remove("hidden");
         return;
     }
 
     if(game.turn===currentPlayer){
-        document.getElementById("turnDisplay").innerHTML="YOUR TURN";
+        document.getElementById("turnDisplay").innerHTML="🎮 YOUR TURN";
         document.getElementById("guessBtn").disabled=false;
     }else{
-        document.getElementById("turnDisplay").innerHTML="WAITING...";
+        document.getElementById("turnDisplay").innerHTML="⏳ WAITING FOR OTHER PLAYER";
         document.getElementById("guessBtn").disabled=true;
+    }
+
+    if(game.guesses && game.guesses.length>0){
+        let last=game.guesses[game.guesses.length-1];
+        if(last.player===currentPlayer){
+            let target=currentPlayer==="youssef"?game.ameni.number:game.youssef.number;
+            let hint=last.guess<target?"⬆️ HIGHER":last.guess>target?"⬇️ LOWER":"✅ CORRECT";
+            const hintDisplay=document.getElementById("hintDisplay");
+            hintDisplay.innerHTML=hint;
+            hintDisplay.classList.remove("hidden");
+        }
     }
 }
 
@@ -284,7 +297,6 @@ function resetGame(){
     gameRef.remove();
     location.reload();
 }
-
 </script>
 
 </body>
