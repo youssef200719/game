@@ -65,9 +65,6 @@
             margin: 10px 0;
             outline: none;
         }
-        input:focus {
-            border-color: #667eea;
-        }
         button {
             width: 100%;
             padding: 15px;
@@ -79,9 +76,6 @@
             font-weight: bold;
             cursor: pointer;
             margin: 5px 0;
-        }
-        button:active {
-            transform: scale(0.98);
         }
         button:disabled {
             background: #ccc;
@@ -102,53 +96,12 @@
             margin: 15px 0;
             font-weight: bold;
             text-align: center;
-            border: 2px solid #4CAF50;
         }
         .hidden { display: none; }
-        .code-input {
-            text-align: center;
-            font-size: 28px;
-            letter-spacing: 5px;
-        }
         .status {
-            font-size: 14px;
-            color: #666;
-            margin: 5px 0;
-        }
-        .winner-box {
-            background: #4CAF50;
-            color: white;
-            padding: 30px;
-            border-radius: 15px;
-            text-align: center;
-            font-size: 24px;
-            margin: 20px 0;
-        }
-        .ping-indicator {
-            font-size: 12px;
-            color: #666;
-            text-align: center;
-            margin: 5px 0;
-        }
-        .connected {
             color: #4CAF50;
-        }
-        .disconnected {
-            color: #f44336;
-        }
-        .loader {
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #4CAF50;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            animation: spin 1s linear infinite;
-            display: inline-block;
-            margin-left: 10px;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            text-align: center;
+            margin: 10px 0;
         }
     </style>
 </head>
@@ -156,21 +109,8 @@
     <div class="game-box">
         <h1>🎮 YOUSSEF 🤝 AMENI</h1>
 
-        <!-- Connection Status -->
-        <div id="connectionStatus" class="ping-indicator">🔄 Connexion...</div>
-
-        <!-- Room Code -->
-        <div id="roomScreen">
-            <div class="section">
-                <h3>🔑 CODE DE LA PARTIE</h3>
-                <input type="text" id="roomCode" class="code-input" placeholder="1234" value="1234" maxlength="4">
-                <button onclick="joinRoom()">REJOINDRE</button>
-                <p class="status">Même code sur les deux téléphones</p>
-            </div>
-        </div>
-
-        <!-- Player Selection -->
-        <div id="playerScreen" class="hidden">
+        <!-- Player Selection (Direct) -->
+        <div id="playerScreen">
             <div class="section">
                 <h3>👤 QUI ÊTES-VOUS ?</h3>
                 <button class="player-btn youssef" onclick="setPlayer('youssef')">YOUSSEF</button>
@@ -182,13 +122,12 @@
         <div id="gameScreen" class="hidden">
             <div id="lockSection" class="section">
                 <h3 id="playerName"></h3>
-                <p>Choisissez votre nombre secret</p>
+                <p>Choisissez votre nombre secret (1-100)</p>
                 <input type="number" id="secretNumber" min="1" max="100" placeholder="1-100">
                 <button onclick="lockNumber()">🔒 VERROUILLER</button>
             </div>
 
             <div id="waitingSection" class="waiting hidden">
-                <div class="loader"></div>
                 ⏳ En attente de l'autre joueur...
             </div>
 
@@ -203,7 +142,8 @@
             </div>
         </div>
 
-        <div id="winnerDisplay" class="winner-box hidden"></div>
+        <div id="winnerDisplay" class="waiting hidden"></div>
+        <div id="connectionStatus" class="status"></div>
         <button onclick="resetGame()" style="background: #f44336; margin-top: 20px;">🔄 NOUVELLE PARTIE</button>
     </div>
 
@@ -222,45 +162,29 @@
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
+        
+        // Fixed game code
+        const gameCode = "game123";
+        const gameRef = database.ref('games/' + gameCode);
 
-        // Enable offline persistence (reduce latency)
+        let currentPlayer = null;
+
+        // Connection status
         database.ref('.info/connected').on('value', (snap) => {
             if (snap.val() === true) {
                 document.getElementById('connectionStatus').innerHTML = '✅ Connecté';
-                document.getElementById('connectionStatus').className = 'ping-indicator connected';
             } else {
-                document.getElementById('connectionStatus').innerHTML = '❌ Déconnecté';
-                document.getElementById('connectionStatus').className = 'ping-indicator disconnected';
+                document.getElementById('connectionStatus').innerHTML = '❌ Connexion...';
             }
         });
 
-        // Game variables
-        let currentPlayer = null;
-        let roomCode = '1234';
-        let gameRef = null;
-
-        function joinRoom() {
-            roomCode = document.getElementById('roomCode').value || '1234';
-            gameRef = database.ref('games/' + roomCode);
-            
-            // Enable offline for this reference
-            gameRef.keepSynced(true);
-            
-            document.getElementById('roomScreen').classList.add('hidden');
-            document.getElementById('playerScreen').classList.remove('hidden');
-
-            // Listen for game changes
-            gameRef.on('value', (snapshot) => {
-                let game = snapshot.val() || {
-                    youssef: { locked: false, number: null },
-                    ameni: { locked: false, number: null },
-                    turn: 'youssef',
-                    winner: null,
-                    guesses: []
-                };
+        // Listen for game changes
+        gameRef.on('value', (snapshot) => {
+            let game = snapshot.val();
+            if (game) {
                 updateFromFirebase(game);
-            });
-        }
+            }
+        });
 
         function setPlayer(player) {
             currentPlayer = player;
@@ -268,7 +192,7 @@
             document.getElementById('gameScreen').classList.remove('hidden');
             document.getElementById('playerName').innerHTML = player === 'youssef' ? '👨 YOUSSEF' : '👩 AMENI';
             
-            // Initialize game if needed
+            // Initialize game
             gameRef.once('value', (snapshot) => {
                 if (!snapshot.val()) {
                     gameRef.set({
@@ -306,10 +230,6 @@
                 return;
             }
 
-            // Optimistic update (reduce perceived latency)
-            document.getElementById('guessBtn').disabled = true;
-            document.getElementById('turnDisplay').innerHTML = '⏳ ENVOI...';
-            
             gameRef.once('value', (snapshot) => {
                 let game = snapshot.val();
                 if (game.winner) return;
@@ -342,17 +262,14 @@
         function updateFromFirebase(game) {
             if (!currentPlayer) return;
 
-            // Update titles
             document.getElementById('guessTitle').innerHTML = 
                 currentPlayer === 'youssef' ? 'Devinez le nombre d\'Ameni' : 'Devinez le nombre de Youssef';
 
-            // Check if both locked
             if (game.youssef?.locked && game.ameni?.locked) {
                 document.getElementById('waitingSection').classList.add('hidden');
                 document.getElementById('playSection').classList.remove('hidden');
             }
 
-            // Check winner
             if (game.winner) {
                 document.getElementById('turnDisplay').innerHTML = '🏆 PARTIE TERMINÉE 🏆';
                 document.getElementById('guessBtn').disabled = true;
@@ -362,7 +279,6 @@
                 return;
             }
 
-            // Update turn
             if (game.turn === currentPlayer) {
                 document.getElementById('turnDisplay').innerHTML = '🎮 C\'EST VOTRE TOUR';
                 document.getElementById('guessBtn').disabled = false;
@@ -371,10 +287,9 @@
                 document.getElementById('guessBtn').disabled = true;
             }
 
-            // Show hint from last guess
             if (game.guesses && game.guesses.length > 0) {
                 let last = game.guesses[game.guesses.length - 1];
-                if (last.player === currentPlayer && !game.winner) {
+                if (last.player === currentPlayer) {
                     let target = currentPlayer === 'youssef' ? game.ameni.number : game.youssef.number;
                     let hint = last.guess < target ? '⬆️ PLUS HAUT' : '⬇️ PLUS BAS';
                     document.getElementById('hintDisplay').innerHTML = hint;
@@ -384,9 +299,7 @@
         }
 
         function resetGame() {
-            if (gameRef) {
-                gameRef.remove();
-            }
+            gameRef.remove();
             location.reload();
         }
     </script>
