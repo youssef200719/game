@@ -1,16 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
+    <title>Youssef & Ameni Game</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Youssef & Ameni Game</title>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
             font-family: Arial, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -20,84 +22,57 @@
             align-items: center;
             padding: 15px;
         }
-
         .game-box {
             background: white;
             border-radius: 20px;
             padding: 25px;
             width: 100%;
-            max-width: 450px;
+            max-width: 400px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.2);
         }
-
         h1 {
             text-align: center;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             color: #333;
-            font-size: 28px;
+            font-size: 24px;
         }
-
-        .player-select {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
         .player-btn {
-            flex: 1;
+            width: 100%;
             padding: 20px;
+            margin: 10px 0;
             font-size: 22px;
             font-weight: bold;
             border: none;
             border-radius: 15px;
             cursor: pointer;
-            transition: transform 0.2s;
             color: white;
+            transition: transform 0.2s;
         }
-
         .player-btn:active {
             transform: scale(0.95);
         }
-
-        .youssef {
-            background: #2196F3;
-            box-shadow: 0 5px 0 #1976D2;
-        }
-
-        .ameni {
-            background: #E91E63;
-            box-shadow: 0 5px 0 #C2185B;
-        }
-
+        .youssef { background: #2196F3; }
+        .ameni { background: #E91E63; }
         .section {
             background: #f8f9fa;
+            border: 2px solid #ddd;
             border-radius: 15px;
             padding: 20px;
-            margin-bottom: 20px;
-            border: 2px solid #e0e0e0;
+            margin: 15px 0;
         }
-
-        .section h3 {
-            margin-bottom: 15px;
-            color: #444;
-            text-align: center;
-        }
-
         input {
             width: 100%;
             padding: 15px;
-            font-size: 24px;
+            font-size: 20px;
             text-align: center;
             border: 2px solid #ddd;
             border-radius: 10px;
             margin: 10px 0;
             outline: none;
         }
-
         input:focus {
             border-color: #667eea;
         }
-
         button {
             width: 100%;
             padding: 15px;
@@ -109,118 +84,55 @@
             font-weight: bold;
             cursor: pointer;
             margin: 5px 0;
-            box-shadow: 0 3px 0 #388E3C;
+            transition: background 0.2s;
         }
-
-        button:active {
-            transform: translateY(3px);
-            box-shadow: none;
+        button:hover {
+            background: #45a049;
         }
-
         button:disabled {
             background: #ccc;
-            box-shadow: 0 3px 0 #999;
-            transform: none;
             cursor: not-allowed;
         }
-
-        .waiting-box {
+        .waiting {
             background: #fff3cd;
-            border: 2px solid #ffeeba;
+            color: #856404;
             padding: 30px;
             border-radius: 15px;
             text-align: center;
-            color: #856404;
             margin: 20px 0;
             font-size: 18px;
         }
-
         .turn-box {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-weight: bold;
             text-align: center;
             font-size: 18px;
-            padding: 15px;
-            background: #e3f2fd;
-            border-radius: 10px;
-            margin: 15px 0;
-            font-weight: bold;
-            border: 2px solid #90caf9;
+            border: 2px solid #a5d6a7;
         }
-
-        .guess-area {
-            background: #f8f9fa;
-            border-radius: 15px;
-            padding: 20px;
-            margin: 15px 0;
-            border: 2px solid #e0e0e0;
-        }
-
-        .hint-box {
-            background: #e8f5e8;
-            border: 2px solid #a5d6a5;
-            padding: 15px;
-            border-radius: 10px;
+        .hidden { display: none; }
+        .code-input {
             text-align: center;
-            font-size: 22px;
-            margin: 15px 0;
+            font-size: 28px;
+            letter-spacing: 5px;
             font-weight: bold;
-            color: #2e7d32;
         }
-
-        .history-box {
-            background: #f8f9fa;
-            border: 2px solid #e0e0e0;
-            border-radius: 15px;
-            padding: 15px;
-            max-height: 200px;
-            overflow-y: auto;
-        }
-
-        .history-item {
-            padding: 8px;
-            border-bottom: 1px solid #eee;
+        .status {
             font-size: 14px;
+            color: #666;
+            margin: 5px 0;
         }
-
         .winner-box {
             background: #4CAF50;
             color: white;
             padding: 30px;
             border-radius: 15px;
             text-align: center;
-            font-size: 28px;
+            font-size: 24px;
             margin: 20px 0;
             font-weight: bold;
-            animation: pulse 1s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.02); }
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .reset-btn {
-            background: #f44336;
-            box-shadow: 0 3px 0 #d32f2f;
-            margin-top: 20px;
-        }
-
-        .link-section {
-            background: #e3f2fd;
-            padding: 15px;
-            border-radius: 10px;
-            margin: 15px 0;
-            text-align: center;
-            word-break: break-all;
-        }
-
-        .link-section input {
-            font-size: 14px;
-            padding: 10px;
-            margin: 5px 0;
         }
     </style>
 </head>
@@ -228,296 +140,205 @@
     <div class="game-box">
         <h1>🎮 YOUSSEF 🤝 AMENI</h1>
 
+        <!-- Room Code -->
+        <div id="roomScreen">
+            <div class="section">
+                <h3>🔑 CODE DE LA PARTIE</h3>
+                <input type="text" id="roomCode" class="code-input" placeholder="1234" value="1234" maxlength="4">
+                <button onclick="joinRoom()">REJOINDRE LA PARTIE</button>
+                <p class="status">Utilisez le même code sur les deux téléphones</p>
+            </div>
+        </div>
+
         <!-- Player Selection -->
-        <div id="playerSelect">
-            <div class="player-select">
-                <button class="player-btn youssef" onclick="selectPlayer('youssef')">YOUSSEF</button>
-                <button class="player-btn ameni" onclick="selectPlayer('ameni')">AMENI</button>
+        <div id="playerScreen" class="hidden">
+            <div class="section">
+                <h3>👤 QUI ÊTES-VOUS ?</h3>
+                <button class="player-btn youssef" onclick="setPlayer('youssef')">👨 YOUSSEF</button>
+                <button class="player-btn ameni" onclick="setPlayer('ameni')">👩 AMENI</button>
             </div>
         </div>
 
         <!-- Game Screen -->
         <div id="gameScreen" class="hidden">
-            <!-- Lock Number -->
             <div id="lockSection" class="section">
-                <h3 id="playerNameDisplay"></h3>
-                <p style="text-align: center; margin-bottom: 10px;">Choose your secret number</p>
-                <input type="number" id="secretInput" min="1" max="100" placeholder="1-100">
-                <button onclick="lockNumber()">🔒 LOCK NUMBER</button>
+                <h3 id="playerName"></h3>
+                <p>Choisissez votre nombre secret (1-100)</p>
+                <input type="number" id="secretNumber" min="1" max="100" placeholder="1-100">
+                <button onclick="lockNumber()">🔒 VERROUILLER</button>
             </div>
 
-            <!-- Waiting -->
-            <div id="waitingSection" class="waiting-box hidden">
-                ⏳ Waiting for the other person...
+            <div id="waitingSection" class="waiting hidden">
+                ⏳ En attente de l'autre joueur...
             </div>
 
-            <!-- Game Play -->
-            <div id="gamePlaySection" class="hidden">
+            <div id="playSection" class="hidden">
                 <div class="turn-box" id="turnDisplay"></div>
-                
-                <div class="guess-area">
+                <div class="section">
                     <h3 id="guessTitle"></h3>
-                    <input type="number" id="guessInput" min="1" max="100" placeholder="Your guess">
-                    <button onclick="makeGuess()" id="guessBtn" disabled>🎯 GUESS</button>
+                    <input type="number" id="guessNumber" min="1" max="100" placeholder="Votre estimation">
+                    <button onclick="makeGuess()" id="guessBtn" disabled>🎯 DEVINER</button>
                 </div>
-
-                <div id="hintDisplay" class="hint-box hidden"></div>
-
-                <div class="history-box">
-                    <h4 style="margin-bottom: 10px;">📝 History</h4>
-                    <div id="historyList"></div>
-                </div>
+                <div id="hintDisplay" class="waiting hidden"></div>
             </div>
         </div>
 
-        <!-- Winner Display -->
         <div id="winnerDisplay" class="winner-box hidden"></div>
-
-        <!-- Share Section -->
-        <div id="shareSection" class="link-section hidden">
-            <p style="margin-bottom: 5px; font-weight: bold;">🔗 Share this link:</p>
-            <input type="text" id="gameLink" readonly onclick="this.select()">
-            <button onclick="copyLink()" style="background: #2196F3; box-shadow: 0 3px 0 #1976D2;">Copy Link</button>
-            <p style="font-size: 12px; margin-top: 5px; color: #666;">Send this link to the other person</p>
-        </div>
-
-        <!-- Reset -->
-        <button class="reset-btn" onclick="resetGame()">🔄 NEW GAME</button>
+        
+        <button onclick="resetGame()" style="background: #f44336; margin-top: 20px;">🔄 NOUVELLE PARTIE</button>
     </div>
 
     <script>
-        let currentPlayer = null;
-        let gameId = Math.random().toString(36).substring(2, 10);
-        
-        let gameState = {
-            secretY: null,
-            secretA: null,
-            youssefLocked: false,
-            ameniLocked: false,
-            turn: 'youssef',
-            winner: null,
-            guesses: []
+        // 🔥 CONFIGURATION FIREBASE 🔥
+        const firebaseConfig = {
+            apiKey: "AIzaSyCrWG5PZpm3EGmQoFJofmECCNsnN8uMYc",
+            authDomain: "youssef-ameni-game.firebaseapp.com",
+            databaseURL: "https://youssef-ameni-game-default-rtdb.firebaseio.com",
+            projectId: "youssef-ameni-game",
+            storageBucket: "youssef-ameni-game.firebasestorage.app",
+            messagingSenderId: "238776242009",
+            appId: "1:238776242009:web:a34003b6e0f1d1e0ec648"
         };
 
-        // Save to URL
-        function saveToUrl() {
-            let data = {
-                y: gameState.secretY,
-                a: gameState.secretA,
-                yl: gameState.youssefLocked,
-                al: gameState.ameniLocked,
-                t: gameState.turn,
-                w: gameState.winner,
-                g: gameState.guesses
-            };
-            let encoded = btoa(JSON.stringify(data));
-            let url = new URL(window.location.href);
-            url.searchParams.set('game', encoded);
-            window.history.replaceState({}, '', url);
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // Game variables
+        let currentPlayer = null;
+        let roomCode = '1234';
+        let gameRef = null;
+
+        function joinRoom() {
+            roomCode = document.getElementById('roomCode').value || '1234';
+            gameRef = database.ref('games/' + roomCode);
             
-            let linkInput = document.getElementById('gameLink');
-            if (linkInput) {
-                linkInput.value = url.toString();
-            }
+            document.getElementById('roomScreen').classList.add('hidden');
+            document.getElementById('playerScreen').classList.remove('hidden');
+
+            // Listen for game changes
+            gameRef.on('value', (snapshot) => {
+                let game = snapshot.val() || {
+                    youssef: { locked: false, number: null },
+                    ameni: { locked: false, number: null },
+                    turn: 'youssef',
+                    winner: null,
+                    guesses: []
+                };
+                updateFromFirebase(game);
+            });
         }
 
-        // Load from URL
-        function loadFromUrl() {
-            let params = new URLSearchParams(window.location.search);
-            let gameParam = params.get('game');
-            if (gameParam) {
-                try {
-                    let data = JSON.parse(atob(gameParam));
-                    gameState = {
-                        secretY: data.y,
-                        secretA: data.a,
-                        youssefLocked: data.yl,
-                        ameniLocked: data.al,
-                        turn: data.t,
-                        winner: data.w,
-                        guesses: data.g || []
-                    };
-                    return true;
-                } catch (e) {
-                    return false;
-                }
-            }
-            return false;
-        }
-
-        // Select player
-        function selectPlayer(player) {
+        function setPlayer(player) {
             currentPlayer = player;
-            document.getElementById('playerSelect').classList.add('hidden');
+            document.getElementById('playerScreen').classList.add('hidden');
             document.getElementById('gameScreen').classList.remove('hidden');
-            document.getElementById('shareSection').classList.remove('hidden');
-            
-            if (player === 'youssef') {
-                document.getElementById('playerNameDisplay').innerHTML = '👤 YOUSSEF';
-            } else {
-                document.getElementById('playerNameDisplay').innerHTML = '👤 AMENI';
-            }
-            
-            loadFromUrl();
-            saveToUrl();
-            updateDisplay();
+            document.getElementById('playerName').innerHTML = player === 'youssef' ? '👨 YOUSSEF' : '👩 AMENI';
         }
 
-        // Lock number
         function lockNumber() {
-            let num = parseInt(document.getElementById('secretInput').value);
+            let num = parseInt(document.getElementById('secretNumber').value);
             if (num < 1 || num > 100) {
-                alert('Please enter a number between 1 and 100');
+                alert('❌ Le nombre doit être entre 1 et 100');
                 return;
             }
 
-            if (currentPlayer === 'youssef') {
-                gameState.secretY = num;
-                gameState.youssefLocked = true;
-            } else {
-                gameState.secretA = num;
-                gameState.ameniLocked = true;
-            }
-
+            let updates = {};
+            updates[currentPlayer + '/locked'] = true;
+            updates[currentPlayer + '/number'] = num;
+            
+            gameRef.update(updates);
+            
             document.getElementById('lockSection').classList.add('hidden');
             document.getElementById('waitingSection').classList.remove('hidden');
-            
-            saveToUrl();
-            checkGameStart();
         }
 
-        // Check if both locked
-        function checkGameStart() {
-            if (gameState.youssefLocked && gameState.ameniLocked) {
-                document.getElementById('waitingSection').classList.add('hidden');
-                document.getElementById('gamePlaySection').classList.remove('hidden');
-                updateDisplay();
-            }
-        }
-
-        // Make guess
         function makeGuess() {
-            if (gameState.winner) return;
-            
-            let guess = parseInt(document.getElementById('guessInput').value);
+            let guess = parseInt(document.getElementById('guessNumber').value);
             if (guess < 1 || guess > 100) {
-                alert('Please enter a number between 1 and 100');
+                alert('❌ Le nombre doit être entre 1 et 100');
                 return;
             }
 
-            let target = (currentPlayer === 'youssef') ? gameState.secretA : gameState.secretY;
-            let correct = (guess === target);
+            gameRef.once('value', (snapshot) => {
+                let game = snapshot.val();
+                if (game.winner) return;
 
-            gameState.guesses.push({
-                player: currentPlayer,
-                guess: guess,
-                correct: correct
+                let target = currentPlayer === 'youssef' ? game.ameni.number : game.youssef.number;
+                let correct = guess === target;
+
+                let newGuess = {
+                    player: currentPlayer,
+                    guess: guess,
+                    timestamp: Date.now()
+                };
+
+                let guesses = game.guesses || [];
+                guesses.push(newGuess);
+
+                let updates = { guesses: guesses };
+
+                if (correct) {
+                    updates.winner = currentPlayer;
+                } else {
+                    updates.turn = currentPlayer === 'youssef' ? 'ameni' : 'youssef';
+                }
+
+                gameRef.update(updates);
+                document.getElementById('guessNumber').value = '';
             });
-
-            if (correct) {
-                gameState.winner = currentPlayer;
-            } else {
-                gameState.turn = (currentPlayer === 'youssef') ? 'ameni' : 'youssef';
-            }
-
-            document.getElementById('guessInput').value = '';
-            saveToUrl();
-            updateDisplay();
-
-            if (gameState.winner) {
-                showWinner();
-            }
         }
 
-        // Update display
-        function updateDisplay() {
+        function updateFromFirebase(game) {
             if (!currentPlayer) return;
 
-            let turnEl = document.getElementById('turnDisplay');
-            let guessBtn = document.getElementById('guessBtn');
-            let guessTitle = document.getElementById('guessTitle');
-            let hintEl = document.getElementById('hintDisplay');
+            // Update titles
+            document.getElementById('guessTitle').innerHTML = 
+                currentPlayer === 'youssef' ? 'Devinez le nombre d\'Ameni' : 'Devinez le nombre de Youssef';
 
-            // Set guess title
-            guessTitle.innerHTML = (currentPlayer === 'youssef') ? 
-                'Guess Ameni\'s Number' : 'Guess Youssef\'s Number';
+            // Check if both locked
+            if (game.youssef?.locked && game.ameni?.locked) {
+                document.getElementById('waitingSection').classList.add('hidden');
+                document.getElementById('playSection').classList.remove('hidden');
+            }
 
-            if (gameState.winner) {
-                turnEl.innerText = gameState.winner === currentPlayer ? '👑 YOU WON!' : '👑 OTHER PLAYER WON!';
-                guessBtn.disabled = true;
+            // Check winner
+            if (game.winner) {
+                document.getElementById('turnDisplay').innerHTML = '🏆 PARTIE TERMINÉE 🏆';
+                document.getElementById('guessBtn').disabled = true;
+                document.getElementById('winnerDisplay').innerHTML = 
+                    game.winner === 'youssef' ? '🏆 YOUSSEF GAGNE ! 🏆' : '🏆 AMENI GAGNE ! 🏆';
+                document.getElementById('winnerDisplay').classList.remove('hidden');
                 return;
             }
 
             // Update turn
-            if (gameState.turn === currentPlayer) {
-                turnEl.innerText = '🎮 YOUR TURN';
-                guessBtn.disabled = false;
-                hintEl.classList.add('hidden');
+            if (game.turn === currentPlayer) {
+                document.getElementById('turnDisplay').innerHTML = '🎮 C\'EST VOTRE TOUR';
+                document.getElementById('guessBtn').disabled = false;
             } else {
-                turnEl.innerText = '⏳ WAITING';
-                guessBtn.disabled = true;
-                
-                // Show hint from last guess
-                if (gameState.guesses.length > 0) {
-                    let last = gameState.guesses[gameState.guesses.length - 1];
-                    if (last.player === currentPlayer && !last.correct) {
-                        let target = (currentPlayer === 'youssef') ? gameState.secretA : gameState.secretY;
-                        let hint = last.guess < target ? '⬆️ HIGHER' : '⬇️ LOWER';
-                        hintEl.innerText = hint;
-                        hintEl.classList.remove('hidden');
-                    }
+                document.getElementById('turnDisplay').innerHTML = '⏳ EN ATTENTE DE L\'AUTRE';
+                document.getElementById('guessBtn').disabled = true;
+            }
+
+            // Show hint from last guess
+            if (game.guesses && game.guesses.length > 0) {
+                let last = game.guesses[game.guesses.length - 1];
+                if (last.player === currentPlayer) {
+                    let target = currentPlayer === 'youssef' ? game.ameni.number : game.youssef.number;
+                    let hint = last.guess < target ? '⬆️ PLUS HAUT' : '⬇️ PLUS BAS';
+                    document.getElementById('hintDisplay').innerHTML = hint;
+                    document.getElementById('hintDisplay').classList.remove('hidden');
                 }
             }
-
-            // Update history
-            let historyHtml = '';
-            gameState.guesses.slice().reverse().forEach(g => {
-                let name = (g.player === 'youssef') ? 'Youssef' : 'Ameni';
-                let you = (g.player === currentPlayer) ? ' (You)' : '';
-                let result = g.correct ? ' ✅' : '';
-                historyHtml += `<div class="history-item">${name}${you}: ${g.guess}${result}</div>`;
-            });
-            if (!historyHtml) {
-                historyHtml = '<div class="history-item">No guesses yet</div>';
-            }
-            document.getElementById('historyList').innerHTML = historyHtml;
         }
 
-        // Show winner
-        function showWinner() {
-            let winnerDiv = document.getElementById('winnerDisplay');
-            winnerDiv.classList.remove('hidden');
-            winnerDiv.innerText = (gameState.winner === 'youssef') ? 
-                '🏆 YOUSSEF WINS! 🏆' : '🏆 AMENI WINS! 🏆';
-            document.getElementById('guessBtn').disabled = true;
-        }
-
-        // Copy link
-        function copyLink() {
-            let link = document.getElementById('gameLink');
-            link.select();
-            document.execCommand('copy');
-            alert('Link copied! Send it to Ameni');
-        }
-
-        // Reset game
         function resetGame() {
-            window.location.href = window.location.pathname;
-        }
-
-        // Check for updates every 2 seconds
-        setInterval(() => {
-            if (currentPlayer) {
-                if (loadFromUrl()) {
-                    updateDisplay();
-                    checkGameStart();
-                    if (gameState.winner) showWinner();
-                }
+            if (gameRef) {
+                gameRef.remove();
             }
-        }, 2000);
-
-        // Initial load
-        loadFromUrl();
+            location.reload();
+        }
     </script>
 </body>
 </html>
