@@ -13,7 +13,7 @@
 
         body {
             font-family: Arial, sans-serif;
-            background: #f0f2f5;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -21,93 +21,81 @@
             padding: 15px;
         }
 
-        .container {
+        .game-box {
             background: white;
-            border-radius: 15px;
-            padding: 20px;
+            border-radius: 20px;
+            padding: 25px;
             width: 100%;
-            max-width: 400px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            max-width: 450px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
         }
 
         h1 {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             color: #333;
-            font-size: 24px;
+            font-size: 28px;
         }
 
-        .section {
-            background: #f8f9fa;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .section h3 {
-            margin-bottom: 15px;
-            color: #333;
-        }
-
-        .section input {
-            width: 100%;
-            padding: 15px;
-            font-size: 20px;
-            text-align: center;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            margin: 10px 0;
-        }
-
-        .player-buttons {
+        .player-select {
             display: flex;
-            gap: 10px;
-            margin: 15px 0;
+            gap: 15px;
+            margin-bottom: 25px;
         }
 
-        .player-choice {
+        .player-btn {
             flex: 1;
             padding: 20px;
             font-size: 22px;
             font-weight: bold;
-            border: 3px solid;
-            background: white;
-            border-radius: 10px;
+            border: none;
+            border-radius: 15px;
             cursor: pointer;
+            transition: transform 0.2s;
+            color: white;
         }
 
-        .player-choice.youssef {
-            color: #2196F3;
-            border-color: #2196F3;
+        .player-btn:active {
+            transform: scale(0.95);
         }
 
-        .player-choice.youssef:hover {
+        .youssef {
             background: #2196F3;
-            color: white;
+            box-shadow: 0 5px 0 #1976D2;
         }
 
-        .player-choice.ameni {
-            color: #E91E63;
-            border-color: #E91E63;
-        }
-
-        .player-choice.ameni:hover {
+        .ameni {
             background: #E91E63;
-            color: white;
+            box-shadow: 0 5px 0 #C2185B;
         }
 
-        .code-box {
-            background: #333;
-            color: white;
-            font-size: 40px;
-            font-weight: bold;
-            padding: 15px;
-            border-radius: 10px;
-            margin: 15px 0;
+        .section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .section h3 {
+            margin-bottom: 15px;
+            color: #444;
             text-align: center;
-            letter-spacing: 5px;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            font-size: 24px;
+            text-align: center;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            margin: 10px 0;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #667eea;
         }
 
         button {
@@ -116,26 +104,31 @@
             background: #4CAF50;
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 18px;
             font-weight: bold;
             cursor: pointer;
             margin: 5px 0;
+            box-shadow: 0 3px 0 #388E3C;
+        }
+
+        button:active {
+            transform: translateY(3px);
+            box-shadow: none;
         }
 
         button:disabled {
             background: #ccc;
+            box-shadow: 0 3px 0 #999;
+            transform: none;
             cursor: not-allowed;
-        }
-
-        button.reset {
-            background: #f44336;
         }
 
         .waiting-box {
             background: #fff3cd;
+            border: 2px solid #ffeeba;
             padding: 30px;
-            border-radius: 10px;
+            border-radius: 15px;
             text-align: center;
             color: #856404;
             margin: 20px 0;
@@ -146,488 +139,385 @@
             text-align: center;
             font-size: 18px;
             padding: 15px;
-            background: #e8f5e9;
-            border-radius: 8px;
-            margin: 10px 0;
+            background: #e3f2fd;
+            border-radius: 10px;
+            margin: 15px 0;
             font-weight: bold;
+            border: 2px solid #90caf9;
         }
 
-        .guess-box {
+        .guess-area {
             background: #f8f9fa;
-            border: 2px solid #ddd;
-            border-radius: 10px;
+            border-radius: 15px;
             padding: 20px;
             margin: 15px 0;
-        }
-
-        .guess-box input {
-            width: 100%;
-            padding: 15px;
-            font-size: 24px;
-            text-align: center;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            margin-bottom: 10px;
+            border: 2px solid #e0e0e0;
         }
 
         .hint-box {
-            background: #e3f2fd;
+            background: #e8f5e8;
+            border: 2px solid #a5d6a5;
             padding: 15px;
-            border-radius: 8px;
+            border-radius: 10px;
             text-align: center;
-            font-size: 20px;
+            font-size: 22px;
             margin: 15px 0;
             font-weight: bold;
+            color: #2e7d32;
         }
 
         .history-box {
             background: #f8f9fa;
-            border: 2px solid #ddd;
-            border-radius: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
             padding: 15px;
             max-height: 200px;
             overflow-y: auto;
-            margin-top: 15px;
         }
 
         .history-item {
             padding: 8px;
             border-bottom: 1px solid #eee;
+            font-size: 14px;
         }
 
         .winner-box {
             background: #4CAF50;
             color: white;
             padding: 30px;
-            border-radius: 10px;
+            border-radius: 15px;
             text-align: center;
             font-size: 28px;
             margin: 20px 0;
             font-weight: bold;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
         }
 
         .hidden {
             display: none;
         }
 
-        .status {
+        .reset-btn {
+            background: #f44336;
+            box-shadow: 0 3px 0 #d32f2f;
+            margin-top: 20px;
+        }
+
+        .link-section {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            text-align: center;
+            word-break: break-all;
+        }
+
+        .link-section input {
             font-size: 14px;
-            color: #666;
-            margin-top: 10px;
+            padding: 10px;
+            margin: 5px 0;
         }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="game-box">
         <h1>🎮 YOUSSEF 🤝 AMENI</h1>
 
-        <!-- Enter Code -->
-        <div id="enterCodeScreen">
-            <div class="section">
-                <h3>ENTER GAME CODE</h3>
-                <input type="text" id="gameCode" placeholder="Code (ex: 1234)" value="1234">
-                <button onclick="enterCode()">JOIN GAME</button>
-                <p class="status">Use same code on both phones</p>
+        <!-- Player Selection -->
+        <div id="playerSelect">
+            <div class="player-select">
+                <button class="player-btn youssef" onclick="selectPlayer('youssef')">YOUSSEF</button>
+                <button class="player-btn ameni" onclick="selectPlayer('ameni')">AMENI</button>
             </div>
         </div>
 
-        <!-- Choose Player -->
-        <div id="choosePlayerScreen" class="hidden">
-            <div class="section">
-                <h3>WHO ARE YOU?</h3>
-                <div class="player-buttons">
-                    <button class="player-choice youssef" onclick="setPlayer('youssef')">YOUSSEF</button>
-                    <button class="player-choice ameni" onclick="setPlayer('ameni')">AMENI</button>
-                </div>
-                <div class="code-box" id="codeDisplay">1234</div>
-                <p class="status">Share this code with the other person</p>
-            </div>
-        </div>
-
-        <!-- Youssef's Screen -->
-        <div id="youssefScreen" class="hidden">
+        <!-- Game Screen -->
+        <div id="gameScreen" class="hidden">
             <!-- Lock Number -->
-            <div id="youssefLock" class="section">
-                <h3>👤 YOUSSEF</h3>
-                <p style="margin-bottom: 15px;">Choose your secret number</p>
-                <input type="number" id="youssefSecret" min="1" max="100" placeholder="1-100">
-                <button onclick="lockNumber('youssef')">LOCK NUMBER</button>
+            <div id="lockSection" class="section">
+                <h3 id="playerNameDisplay"></h3>
+                <p style="text-align: center; margin-bottom: 10px;">Choose your secret number</p>
+                <input type="number" id="secretInput" min="1" max="100" placeholder="1-100">
+                <button onclick="lockNumber()">🔒 LOCK NUMBER</button>
             </div>
 
             <!-- Waiting -->
-            <div id="youssefWaiting" class="waiting-box hidden">
-                ⏳ Waiting for Ameni to lock her number...
+            <div id="waitingSection" class="waiting-box hidden">
+                ⏳ Waiting for the other person...
             </div>
 
-            <!-- Game -->
-            <div id="youssefGame" class="hidden">
-                <div class="turn-box" id="youssefTurn">Loading...</div>
+            <!-- Game Play -->
+            <div id="gamePlaySection" class="hidden">
+                <div class="turn-box" id="turnDisplay"></div>
                 
-                <div class="guess-box">
-                    <h3 style="margin-bottom: 10px;">Guess Ameni's number</h3>
-                    <input type="number" id="youssefGuess" min="1" max="100" placeholder="Your guess">
-                    <button onclick="makeGuess('youssef')" id="youssefBtn" disabled>GUESS</button>
+                <div class="guess-area">
+                    <h3 id="guessTitle"></h3>
+                    <input type="number" id="guessInput" min="1" max="100" placeholder="Your guess">
+                    <button onclick="makeGuess()" id="guessBtn" disabled>🎯 GUESS</button>
                 </div>
 
-                <div id="youssefHint" class="hint-box hidden"></div>
+                <div id="hintDisplay" class="hint-box hidden"></div>
 
                 <div class="history-box">
                     <h4 style="margin-bottom: 10px;">📝 History</h4>
-                    <div id="youssefHistory"></div>
+                    <div id="historyList"></div>
                 </div>
             </div>
         </div>
 
-        <!-- Ameni's Screen -->
-        <div id="ameniScreen" class="hidden">
-            <!-- Lock Number -->
-            <div id="ameniLock" class="section">
-                <h3>👤 AMENI</h3>
-                <p style="margin-bottom: 15px;">Choose your secret number</p>
-                <input type="number" id="ameniSecret" min="1" max="100" placeholder="1-100">
-                <button onclick="lockNumber('ameni')">LOCK NUMBER</button>
-            </div>
+        <!-- Winner Display -->
+        <div id="winnerDisplay" class="winner-box hidden"></div>
 
-            <!-- Waiting -->
-            <div id="ameniWaiting" class="waiting-box hidden">
-                ⏳ Waiting for Youssef to lock his number...
-            </div>
-
-            <!-- Game -->
-            <div id="ameniGame" class="hidden">
-                <div class="turn-box" id="ameniTurn">Loading...</div>
-                
-                <div class="guess-box">
-                    <h3 style="margin-bottom: 10px;">Guess Youssef's number</h3>
-                    <input type="number" id="ameniGuess" min="1" max="100" placeholder="Your guess">
-                    <button onclick="makeGuess('ameni')" id="ameniBtn" disabled>GUESS</button>
-                </div>
-
-                <div id="ameniHint" class="hint-box hidden"></div>
-
-                <div class="history-box">
-                    <h4 style="margin-bottom: 10px;">📝 History</h4>
-                    <div id="ameniHistory"></div>
-                </div>
-            </div>
+        <!-- Share Section -->
+        <div id="shareSection" class="link-section hidden">
+            <p style="margin-bottom: 5px; font-weight: bold;">🔗 Share this link:</p>
+            <input type="text" id="gameLink" readonly onclick="this.select()">
+            <button onclick="copyLink()" style="background: #2196F3; box-shadow: 0 3px 0 #1976D2;">Copy Link</button>
+            <p style="font-size: 12px; margin-top: 5px; color: #666;">Send this link to the other person</p>
         </div>
-
-        <!-- Winner -->
-        <div id="winnerScreen" class="winner-box hidden"></div>
 
         <!-- Reset -->
-        <button class="reset" onclick="resetGame()" style="margin-top: 20px;">🔄 NEW GAME</button>
+        <button class="reset-btn" onclick="resetGame()">🔄 NEW GAME</button>
     </div>
 
     <script>
         let currentPlayer = null;
-        let gameCode = null;
+        let gameId = Math.random().toString(36).substring(2, 10);
+        
+        let gameState = {
+            secretY: null,
+            secretA: null,
+            youssefLocked: false,
+            ameniLocked: false,
+            turn: 'youssef',
+            winner: null,
+            guesses: []
+        };
 
-        // Get game data from localStorage
-        function getGame() {
-            if (!gameCode) return null;
-            let data = localStorage.getItem('game_' + gameCode);
-            return data ? JSON.parse(data) : null;
+        // Save to URL
+        function saveToUrl() {
+            let data = {
+                y: gameState.secretY,
+                a: gameState.secretA,
+                yl: gameState.youssefLocked,
+                al: gameState.ameniLocked,
+                t: gameState.turn,
+                w: gameState.winner,
+                g: gameState.guesses
+            };
+            let encoded = btoa(JSON.stringify(data));
+            let url = new URL(window.location.href);
+            url.searchParams.set('game', encoded);
+            window.history.replaceState({}, '', url);
+            
+            let linkInput = document.getElementById('gameLink');
+            if (linkInput) {
+                linkInput.value = url.toString();
+            }
         }
 
-        // Save game data
-        function saveGame(gameData) {
-            if (!gameCode) return;
-            localStorage.setItem('game_' + gameCode, JSON.stringify(gameData));
-        }
-
-        // Enter code
-        function enterCode() {
-            let code = document.getElementById('gameCode').value;
-            if (code) {
-                gameCode = code;
-                document.getElementById('codeDisplay').innerText = code;
-                document.getElementById('enterCodeScreen').classList.add('hidden');
-                document.getElementById('choosePlayerScreen').classList.remove('hidden');
-                
-                // Create game if it doesn't exist
-                let game = getGame();
-                if (!game) {
-                    game = {
-                        secretY: null,
-                        secretA: null,
-                        youssefLocked: false,
-                        ameniLocked: false,
-                        turn: 'youssef',
-                        winner: null,
-                        guesses: []
+        // Load from URL
+        function loadFromUrl() {
+            let params = new URLSearchParams(window.location.search);
+            let gameParam = params.get('game');
+            if (gameParam) {
+                try {
+                    let data = JSON.parse(atob(gameParam));
+                    gameState = {
+                        secretY: data.y,
+                        secretA: data.a,
+                        youssefLocked: data.yl,
+                        ameniLocked: data.al,
+                        turn: data.t,
+                        winner: data.w,
+                        guesses: data.g || []
                     };
-                    saveGame(game);
+                    return true;
+                } catch (e) {
+                    return false;
                 }
             }
+            return false;
         }
 
-        // Set player
-        function setPlayer(player) {
+        // Select player
+        function selectPlayer(player) {
             currentPlayer = player;
-            document.getElementById('choosePlayerScreen').classList.add('hidden');
+            document.getElementById('playerSelect').classList.add('hidden');
+            document.getElementById('gameScreen').classList.remove('hidden');
+            document.getElementById('shareSection').classList.remove('hidden');
             
             if (player === 'youssef') {
-                document.getElementById('youssefScreen').classList.remove('hidden');
+                document.getElementById('playerNameDisplay').innerHTML = '👤 YOUSSEF';
             } else {
-                document.getElementById('ameniScreen').classList.remove('hidden');
+                document.getElementById('playerNameDisplay').innerHTML = '👤 AMENI';
             }
             
-            updateScreen();
+            loadFromUrl();
+            saveToUrl();
+            updateDisplay();
         }
 
         // Lock number
-        function lockNumber(player) {
-            let game = getGame();
-            if (!game) return;
-
-            if (player === 'youssef') {
-                let num = parseInt(document.getElementById('youssefSecret').value);
-                if (num >= 1 && num <= 100) {
-                    game.secretY = num;
-                    game.youssefLocked = true;
-                    saveGame(game);
-                    
-                    document.getElementById('youssefLock').classList.add('hidden');
-                    document.getElementById('youssefWaiting').classList.remove('hidden');
-                } else {
-                    alert('Number must be 1-100');
-                }
-            } else {
-                let num = parseInt(document.getElementById('ameniSecret').value);
-                if (num >= 1 && num <= 100) {
-                    game.secretA = num;
-                    game.ameniLocked = true;
-                    saveGame(game);
-                    
-                    document.getElementById('ameniLock').classList.add('hidden');
-                    document.getElementById('ameniWaiting').classList.remove('hidden');
-                } else {
-                    alert('Number must be 1-100');
-                }
+        function lockNumber() {
+            let num = parseInt(document.getElementById('secretInput').value);
+            if (num < 1 || num > 100) {
+                alert('Please enter a number between 1 and 100');
+                return;
             }
 
+            if (currentPlayer === 'youssef') {
+                gameState.secretY = num;
+                gameState.youssefLocked = true;
+            } else {
+                gameState.secretA = num;
+                gameState.ameniLocked = true;
+            }
+
+            document.getElementById('lockSection').classList.add('hidden');
+            document.getElementById('waitingSection').classList.remove('hidden');
+            
+            saveToUrl();
             checkGameStart();
         }
 
         // Check if both locked
         function checkGameStart() {
-            let game = getGame();
-            if (!game) return;
-
-            if (game.youssefLocked && game.ameniLocked) {
-                game.turn = 'youssef';
-                saveGame(game);
-                
-                if (currentPlayer === 'youssef') {
-                    document.getElementById('youssefWaiting').classList.add('hidden');
-                    document.getElementById('youssefGame').classList.remove('hidden');
-                } else {
-                    document.getElementById('ameniWaiting').classList.add('hidden');
-                    document.getElementById('ameniGame').classList.remove('hidden');
-                }
+            if (gameState.youssefLocked && gameState.ameniLocked) {
+                document.getElementById('waitingSection').classList.add('hidden');
+                document.getElementById('gamePlaySection').classList.remove('hidden');
+                updateDisplay();
             }
         }
 
         // Make guess
-        function makeGuess(player) {
-            let game = getGame();
-            if (!game || game.winner) return;
-            if (game.turn !== player) return;
-
-            let guess;
-            if (player === 'youssef') {
-                guess = parseInt(document.getElementById('youssefGuess').value);
-                if (!guess || guess < 1 || guess > 100) {
-                    alert('Enter 1-100');
-                    return;
-                }
-
-                // Check guess
-                if (guess === game.secretA) {
-                    game.winner = 'youssef';
-                } else {
-                    game.turn = 'ameni';
-                }
-
-                // Add to history
-                game.guesses.push({
-                    player: 'youssef',
-                    guess: guess,
-                    correct: guess === game.secretA
-                });
-
-                document.getElementById('youssefGuess').value = '';
-            } else {
-                guess = parseInt(document.getElementById('ameniGuess').value);
-                if (!guess || guess < 1 || guess > 100) {
-                    alert('Enter 1-100');
-                    return;
-                }
-
-                // Check guess
-                if (guess === game.secretY) {
-                    game.winner = 'ameni';
-                } else {
-                    game.turn = 'youssef';
-                }
-
-                // Add to history
-                game.guesses.push({
-                    player: 'ameni',
-                    guess: guess,
-                    correct: guess === game.secretY
-                });
-
-                document.getElementById('ameniGuess').value = '';
+        function makeGuess() {
+            if (gameState.winner) return;
+            
+            let guess = parseInt(document.getElementById('guessInput').value);
+            if (guess < 1 || guess > 100) {
+                alert('Please enter a number between 1 and 100');
+                return;
             }
 
-            saveGame(game);
-            updateScreen();
+            let target = (currentPlayer === 'youssef') ? gameState.secretA : gameState.secretY;
+            let correct = (guess === target);
 
-            if (game.winner) {
+            gameState.guesses.push({
+                player: currentPlayer,
+                guess: guess,
+                correct: correct
+            });
+
+            if (correct) {
+                gameState.winner = currentPlayer;
+            } else {
+                gameState.turn = (currentPlayer === 'youssef') ? 'ameni' : 'youssef';
+            }
+
+            document.getElementById('guessInput').value = '';
+            saveToUrl();
+            updateDisplay();
+
+            if (gameState.winner) {
                 showWinner();
             }
         }
 
-        // Update screen
-        function updateScreen() {
-            let game = getGame();
-            if (!game) return;
+        // Update display
+        function updateDisplay() {
+            if (!currentPlayer) return;
 
-            if (currentPlayer === 'youssef') {
-                // Update Youssef's screen
-                if (!game.winner) {
-                    let turnEl = document.getElementById('youssefTurn');
-                    let btn = document.getElementById('youssefBtn');
-                    let hintEl = document.getElementById('youssefHint');
-                    
-                    if (game.turn === 'youssef') {
-                        turnEl.innerText = '🎮 YOUR TURN - Guess Ameni\'s number';
-                        btn.disabled = false;
-                        hintEl.classList.add('hidden');
-                    } else {
-                        turnEl.innerText = '⏳ AMENI\'S TURN - Waiting...';
-                        btn.disabled = true;
-                        
-                        // Show last hint if available
-                        if (game.guesses.length > 0) {
-                            let last = game.guesses[game.guesses.length - 1];
-                            if (last.player === 'youssef') {
-                                let target = game.secretA;
-                                let hint = last.guess < target ? '⬆️ HIGHER' : '⬇️ LOWER';
-                                hintEl.innerText = hint;
-                                hintEl.classList.remove('hidden');
-                            }
-                        }
-                    }
-                }
+            let turnEl = document.getElementById('turnDisplay');
+            let guessBtn = document.getElementById('guessBtn');
+            let guessTitle = document.getElementById('guessTitle');
+            let hintEl = document.getElementById('hintDisplay');
 
-                // Update history
-                let historyHtml = '';
-                game.guesses.slice().reverse().forEach(g => {
-                    let hint = '';
-                    if (g.player === 'youssef' && !g.correct) {
-                        let target = game.secretA;
-                        hint = g.guess < target ? ' ⬆️' : ' ⬇️';
-                    } else if (g.player === 'ameni' && !g.correct) {
-                        let target = game.secretY;
-                        hint = g.guess < target ? ' ⬆️' : ' ⬇️';
-                    }
-                    historyHtml += `<div class="history-item">${g.player === 'youssef' ? 'You' : 'Ameni'}: ${g.guess}${g.correct ? ' ✅' : hint}</div>`;
-                });
-                if (historyHtml === '') {
-                    historyHtml = '<div class="history-item">No guesses yet</div>';
-                }
-                document.getElementById('youssefHistory').innerHTML = historyHtml;
+            // Set guess title
+            guessTitle.innerHTML = (currentPlayer === 'youssef') ? 
+                'Guess Ameni\'s Number' : 'Guess Youssef\'s Number';
 
-            } else if (currentPlayer === 'ameni') {
-                // Update Ameni's screen
-                if (!game.winner) {
-                    let turnEl = document.getElementById('ameniTurn');
-                    let btn = document.getElementById('ameniBtn');
-                    let hintEl = document.getElementById('ameniHint');
-                    
-                    if (game.turn === 'ameni') {
-                        turnEl.innerText = '🎮 YOUR TURN - Guess Youssef\'s number';
-                        btn.disabled = false;
-                        hintEl.classList.add('hidden');
-                    } else {
-                        turnEl.innerText = '⏳ YOUSSEF\'S TURN - Waiting...';
-                        btn.disabled = true;
-                        
-                        // Show last hint if available
-                        if (game.guesses.length > 0) {
-                            let last = game.guesses[game.guesses.length - 1];
-                            if (last.player === 'ameni') {
-                                let target = game.secretY;
-                                let hint = last.guess < target ? '⬆️ HIGHER' : '⬇️ LOWER';
-                                hintEl.innerText = hint;
-                                hintEl.classList.remove('hidden');
-                            }
-                        }
-                    }
-                }
-
-                // Update history
-                let historyHtml = '';
-                game.guesses.slice().reverse().forEach(g => {
-                    let hint = '';
-                    if (g.player === 'ameni' && !g.correct) {
-                        let target = game.secretY;
-                        hint = g.guess < target ? ' ⬆️' : ' ⬇️';
-                    } else if (g.player === 'youssef' && !g.correct) {
-                        let target = game.secretA;
-                        hint = g.guess < target ? ' ⬆️' : ' ⬇️';
-                    }
-                    historyHtml += `<div class="history-item">${g.player === 'ameni' ? 'You' : 'Youssef'}: ${g.guess}${g.correct ? ' ✅' : hint}</div>`;
-                });
-                if (historyHtml === '') {
-                    historyHtml = '<div class="history-item">No guesses yet</div>';
-                }
-                document.getElementById('ameniHistory').innerHTML = historyHtml;
+            if (gameState.winner) {
+                turnEl.innerText = gameState.winner === currentPlayer ? '👑 YOU WON!' : '👑 OTHER PLAYER WON!';
+                guessBtn.disabled = true;
+                return;
             }
+
+            // Update turn
+            if (gameState.turn === currentPlayer) {
+                turnEl.innerText = '🎮 YOUR TURN';
+                guessBtn.disabled = false;
+                hintEl.classList.add('hidden');
+            } else {
+                turnEl.innerText = '⏳ WAITING';
+                guessBtn.disabled = true;
+                
+                // Show hint from last guess
+                if (gameState.guesses.length > 0) {
+                    let last = gameState.guesses[gameState.guesses.length - 1];
+                    if (last.player === currentPlayer && !last.correct) {
+                        let target = (currentPlayer === 'youssef') ? gameState.secretA : gameState.secretY;
+                        let hint = last.guess < target ? '⬆️ HIGHER' : '⬇️ LOWER';
+                        hintEl.innerText = hint;
+                        hintEl.classList.remove('hidden');
+                    }
+                }
+            }
+
+            // Update history
+            let historyHtml = '';
+            gameState.guesses.slice().reverse().forEach(g => {
+                let name = (g.player === 'youssef') ? 'Youssef' : 'Ameni';
+                let you = (g.player === currentPlayer) ? ' (You)' : '';
+                let result = g.correct ? ' ✅' : '';
+                historyHtml += `<div class="history-item">${name}${you}: ${g.guess}${result}</div>`;
+            });
+            if (!historyHtml) {
+                historyHtml = '<div class="history-item">No guesses yet</div>';
+            }
+            document.getElementById('historyList').innerHTML = historyHtml;
         }
 
         // Show winner
         function showWinner() {
-            let game = getGame();
-            if (!game) return;
-
-            let winnerDiv = document.getElementById('winnerScreen');
+            let winnerDiv = document.getElementById('winnerDisplay');
             winnerDiv.classList.remove('hidden');
-            
-            if (game.winner === 'youssef') {
-                winnerDiv.innerText = '🏆 YOUSSEF WINS! 🏆';
-            } else {
-                winnerDiv.innerText = '🏆 AMENI WINS! 🏆';
-            }
+            winnerDiv.innerText = (gameState.winner === 'youssef') ? 
+                '🏆 YOUSSEF WINS! 🏆' : '🏆 AMENI WINS! 🏆';
+            document.getElementById('guessBtn').disabled = true;
+        }
 
-            if (currentPlayer === 'youssef') {
-                document.getElementById('youssefBtn').disabled = true;
-            } else {
-                document.getElementById('ameniBtn').disabled = true;
-            }
+        // Copy link
+        function copyLink() {
+            let link = document.getElementById('gameLink');
+            link.select();
+            document.execCommand('copy');
+            alert('Link copied! Send it to Ameni');
         }
 
         // Reset game
         function resetGame() {
-            if (gameCode) {
-                localStorage.removeItem('game_' + gameCode);
-            }
-            location.reload();
+            window.location.href = window.location.pathname;
         }
 
-        // Check for updates every second
+        // Check for updates every 2 seconds
         setInterval(() => {
             if (currentPlayer) {
-                updateScreen();
-                checkGameStart();
+                if (loadFromUrl()) {
+                    updateDisplay();
+                    checkGameStart();
+                    if (gameState.winner) showWinner();
+                }
             }
-        }, 1000);
+        }, 2000);
 
-        // Initial update
-        updateScreen();
+        // Initial load
+        loadFromUrl();
     </script>
 </body>
 </html>
