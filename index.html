@@ -97,7 +97,7 @@
 <body>
 
 <div class="game-box">
-    <h1>🎮 YOUSSEF 🤝 AMENI</h1>
+    <h1>YOUSSEF VS AMENI</h1>
 
     <div id="playerScreen">
         <div class="section">
@@ -173,7 +173,7 @@ function setPlayer(player){
     document.getElementById("playerScreen").classList.add("hidden");
     document.getElementById("gameScreen").classList.remove("hidden");
     document.getElementById("playerName").innerHTML=
-        player==="youssef"?"👨 YOUSSEF":"👩 AMENI";
+        player==="youssef"?"YOUSSEF":"AMENI";
 
     gameRef.once("value",(snap)=>{
         if(!snap.val()){
@@ -266,15 +266,15 @@ function updateUI(game){
         "Guess Youssef's number";
 
     if(game.winner){
-        document.getElementById("turnDisplay").innerHTML="🏆 GAME OVER 🏆";
+        document.getElementById("turnDisplay").innerHTML=" GAME OVER ";
         document.getElementById("guessBtn").disabled=true;
-        winnerDisplay.innerHTML=game.winner==="youssef"?"🏆 YOUSSEF WINS! 🏆":"🏆 AMENI WINS! 🏆";
+        winnerDisplay.innerHTML=game.winner==="youssef"?"YOUSSEF WINS! ":" AMENI WINS! ";
         winnerDisplay.classList.remove("hidden");
         return;
     }
 
     if(game.turn===currentPlayer){
-        document.getElementById("turnDisplay").innerHTML="🎮 YOUR TURN";
+        document.getElementById("turnDisplay").innerHTML="YOUR TURN";
         document.getElementById("guessBtn").disabled=false;
     }else{
         document.getElementById("turnDisplay").innerHTML="⏳ WAITING FOR OTHER PLAYER";
