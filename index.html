@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Youssef vs Ameni - Number Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f2f5;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+        }
+
+        .game-box {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            width: 100%;
+            max-width: 900px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 24px;
+        }
+
+        .secret-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .secret-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            background: #fafafa;
+        }
+
+        .secret-card h3 {
+            margin-bottom: 10px;
+            color: #555;
+            font-size: 16px;
+        }
+
+        .secret-input {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+
+        .secret-input input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .secret-display {
+            background: #fff;
+            padding: 10px;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .hidden-number {
+            color: #999;
+            font-style: italic;
+            background: #f5f5f5;
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+
+        .game-area {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .player-card {
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            background: #fafafa;
+        }
+
+        .player-card.active {
+            border-color: #4CAF50;
+            background: #f0fff0;
+        }
+
+        .player-header {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+            font-size: 18px;
+        }
+
+        .target-info {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 10px;
+            padding: 5px;
+            background: #f0f0f0;
+            border-radius: 4px;
+        }
+
+        .guess-input {
+            display: flex;
+            gap: 5px;
+        }
+
+        .guess-input input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 8px 15px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        button:hover {
+            background: #45a049;
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        button.small {
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+
+        .message-box {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            background: #fafafa;
+            min-height: 60px;
+        }
+
+        .history-box {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            background: #fafafa;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            padding: 5px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+
+        .winner-box {
+            background: #4CAF50;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 15px 0;
+            font-weight: bold;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .turn-info {
+            text-align: center;
+            margin: 10px 0;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .reset-btn {
+            width: 100%;
+            margin-top: 15px;
+            background: #f44336;
+        }
+
+        .reset-btn:hover {
+            background: #d32f2f;
+        }
+
+        .lock-info {
+            font-size: 12px;
+            color: #4CAF50;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-box">
+        <h1>Youssef 🤝 Ameni</h1>
+
+        <!-- Secret Numbers -->
+        <div class="secret-section">
+            <!-- Youssef's secret -->
+            <div class="secret-card">
+                <h3>Youssef's secret number</h3>
+                <div class="secret-input">
+                    <input type="number" id="secretY" placeholder="1-100" min="1" max="100">
+                    <button class="small" onclick="setSecret('youssef')">Lock ✓</button>
+                </div>
+                <div class="secret-display">
+                    <span id="secretYText">Not set</span>
+                    <span id="secretYIcon">🔓</span>
+                </div>
+                <div id="youssefLockInfo" class="lock-info hidden">✓ Your number is locked</div>
+            </div>
+
+            <!-- Ameni's secret -->
+            <div class="secret-card">
+                <h3>Ameni's secret number</h3>
+                <div class="secret-input">
+                    <input type="number" id="secretA" placeholder="1-100" min="1" max="100">
+                    <button class="small" onclick="setSecret('ameni')">Lock ✓</button>
+                </div>
+                <div class="secret-display">
+                    <span id="secretAText">Not set</span>
+                    <span id="secretAIcon">🔓</span>
+                </div>
+                <div id="ameniLockInfo" class="lock-info hidden">✓ Your number is locked</div>
+            </div>
+        </div>
+
+        <!-- Turn indicator -->
+        <div class="turn-info" id="turnDisplay"></div>
+
+        <!-- Game Area -->
+        <div class="game-area">
+            <!-- Youssef guessing -->
+            <div class="player-card" id="youssefCard">
+                <div class="player-header">Youssef</div>
+                <div class="target-info">Trying to find Ameni's number</div>
+                <div class="guess-input">
+                    <input type="number" id="youssefGuess" placeholder="Your guess" min="1" max="100">
+                    <button onclick="guess('youssef')" id="youssefBtn" disabled>Guess</button>
+                </div>
+            </div>
+
+            <!-- Ameni guessing -->
+            <div class="player-card" id="ameniCard">
+                <div class="player-header">Ameni</div>
+                <div class="target-info">Trying to find Youssef's number</div>
+                <div class="guess-input">
+                    <input type="number" id="ameniGuess" placeholder="Your guess" min="1" max="100">
+                    <button onclick="guess('ameni')" id="ameniBtn" disabled>Guess</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Messages -->
+        <div class="message-box" id="messageDisplay">
+            Choose your secret numbers (don't look at each other's screen!)
+        </div>
+
+        <!-- Winner -->
+        <div id="winnerDisplay" class="winner-box hidden"></div>
+
+        <!-- History -->
+        <div class="history-box">
+            <div style="font-weight: bold; margin-bottom: 10px;">📝 History</div>
+            <div id="historyList"></div>
+        </div>
+
+        <!-- Reset -->
+        <button class="reset-btn" onclick="resetGame()">🔄 New Game</button>
+    </div>
+
+    <script>
+        let game = {
+            secretY: null,
+            secretA: null,
+            guessesY: [],
+            guessesA: [],
+            turn: 'youssef',
+            active: false,
+            winner: null,
+            history: []
+        };
+
+        function setSecret(player) {
+            if (player === 'youssef') {
+                let val = parseInt(document.getElementById('secretY').value);
+                if (val >= 1 && val <= 100) {
+                    game.secretY = val;
+                    document.getElementById('secretYText').innerHTML = '✅ Locked';
+                    document.getElementById('secretYIcon').innerHTML = '🔒';
+                    document.getElementById('secretY').disabled = true;
+                    document.getElementById('youssefLockInfo').classList.remove('hidden');
+                    document.querySelector('#youssefLockInfo').innerHTML = '✓ You locked: ' + val;
+                } else {
+                    alert('Number must be 1-100');
+                    return;
+                }
+            } else {
+                let val = parseInt(document.getElementById('secretA').value);
+                if (val >= 1 && val <= 100) {
+                    game.secretA = val;
+                    document.getElementById('secretAText').innerHTML = '✅ Locked';
+                    document.getElementById('secretAIcon').innerHTML = '🔒';
+                    document.getElementById('secretA').disabled = true;
+                    document.getElementById('ameniLockInfo').classList.remove('hidden');
+                    document.querySelector('#ameniLockInfo').innerHTML = '✓ You locked: ' + val;
+                } else {
+                    alert('Number must be 1-100');
+                    return;
+                }
+            }
+
+            if (game.secretY && game.secretA) {
+                game.active = true;
+                document.getElementById('messageDisplay').innerHTML = 'Game started! Youssef goes first';
+                updateUI();
+            }
+        }
+
+        function guess(player) {
+            if (!game.active || game.winner) return;
+
+            let guessVal;
+            if (player === 'youssef') {
+                if (game.turn !== 'youssef') {
+                    document.getElementById('messageDisplay').innerHTML = "Wait for Ameni's turn";
+                    return;
+                }
+                guessVal = parseInt(document.getElementById('youssefGuess').value);
+                if (!guessVal || guessVal < 1 || guessVal > 100) {
+                    alert('Enter 1-100');
+                    return;
+                }
+                
+                game.guessesY.push(guessVal);
+                game.history.push({
+                    player: 'Youssef',
+                    guess: guessVal,
+                    time: new Date().toLocaleTimeString()
+                });
+
+                if (guessVal === game.secretA) {
+                    game.winner = 'youssef';
+                    game.active = false;
+                } else {
+                    let hint = guessVal < game.secretA ? '⬆️ Higher' : '⬇️ Lower';
+                    document.getElementById('messageDisplay').innerHTML = `Youssef guessed ${guessVal} - ${hint}`;
+                    game.turn = 'ameni';
+                }
+            } else {
+                if (game.turn !== 'ameni') {
+                    document.getElementById('messageDisplay').innerHTML = "Wait for Youssef's turn";
+                    return;
+                }
+                guessVal = parseInt(document.getElementById('ameniGuess').value);
+                if (!guessVal || guessVal < 1 || guessVal > 100) {
+                    alert('Enter 1-100');
+                    return;
+                }
+
+                game.guessesA.push(guessVal);
+                game.history.push({
+                    player: 'Ameni',
+                    guess: guessVal,
+                    time: new Date().toLocaleTimeString()
+                });
+
+                if (guessVal === game.secretY) {
+                    game.winner = 'ameni';
+                    game.active = false;
+                } else {
+                    let hint = guessVal < game.secretY ? '⬆️ Higher' : '⬇️ Lower';
+                    document.getElementById('messageDisplay').innerHTML = `Ameni guessed ${guessVal} - ${hint}`;
+                    game.turn = 'youssef';
+                }
+            }
+
+            document.getElementById('youssefGuess').value = '';
+            document.getElementById('ameniGuess').value = '';
+            updateUI();
+
+            if (game.winner) {
+                showWinner();
+            }
+        }
+
+        function showWinner() {
+            let winnerDiv = document.getElementById('winnerDisplay');
+            winnerDiv.classList.remove('hidden');
+            if (game.winner === 'youssef') {
+                winnerDiv.innerHTML = `🏆 Youssef wins! Found Ameni's number (${game.secretA}) 🏆`;
+            } else {
+                winnerDiv.innerHTML = `🏆 Ameni wins! Found Youssef's number (${game.secretY}) 🏆`;
+            }
+        }
+
+        function updateUI() {
+            let youssefCard = document.getElementById('youssefCard');
+            let ameniCard = document.getElementById('ameniCard');
+            let youssefBtn = document.getElementById('youssefBtn');
+            let ameniBtn = document.getElementById('ameniBtn');
+            let turnDisplay = document.getElementById('turnDisplay');
+
+            if (!game.active) {
+                youssefCard.classList.remove('active');
+                ameniCard.classList.remove('active');
+                youssefBtn.disabled = true;
+                ameniBtn.disabled = true;
+                if (game.winner) {
+                    turnDisplay.innerHTML = `Game over - ${game.winner === 'youssef' ? 'Youssef' : 'Ameni'} won!`;
+                } else {
+                    turnDisplay.innerHTML = 'Set your secret numbers';
+                }
+                return;
+            }
+
+            if (game.turn === 'youssef') {
+                youssefCard.classList.add('active');
+                ameniCard.classList.remove('active');
+                youssefBtn.disabled = false;
+                ameniBtn.disabled = true;
+                turnDisplay.innerHTML = '🎮 Youssef\'s turn';
+            } else {
+                youssefCard.classList.remove('active');
+                ameniCard.classList.add('active');
+                youssefBtn.disabled = true;
+                ameniBtn.disabled = false;
+                turnDisplay.innerHTML = '🎮 Ameni\'s turn';
+            }
+
+            // Update history
+            let historyHtml = '';
+            game.history.slice().reverse().forEach(h => {
+                historyHtml += `<div class="history-item">${h.player} guessed ${h.guess} - ${h.time}</div>`;
+            });
+            if (historyHtml === '') {
+                historyHtml = '<div class="history-item">No guesses yet</div>';
+            }
+            document.getElementById('historyList').innerHTML = historyHtml;
+        }
+
+        function resetGame() {
+            game = {
+                secretY: null,
+                secretA: null,
+                guessesY: [],
+                guessesA: [],
+                turn: 'youssef',
+                active: false,
+                winner: null,
+                history: []
+            };
+
+            // Reset UI
+            document.getElementById('secretYText').innerHTML = 'Not set';
+            document.getElementById('secretAText').innerHTML = 'Not set';
+            document.getElementById('secretYIcon').innerHTML = '🔓';
+            document.getElementById('secretAIcon').innerHTML = '🔓';
+            document.getElementById('secretY').disabled = false;
+            document.getElementById('secretA').disabled = false;
+            document.getElementById('secretY').value = '';
+            document.getElementById('secretA').value = '';
+            document.getElementById('youssefGuess').value = '';
+            document.getElementById('ameniGuess').value = '';
+            document.getElementById('winnerDisplay').classList.add('hidden');
+            document.getElementById('messageDisplay').innerHTML = 'Choose your secret numbers (don\'t look at each other\'s screen!)';
+            document.getElementById('youssefLockInfo').classList.add('hidden');
+            document.getElementById('ameniLockInfo').classList.add('hidden');
+            
+            updateUI();
+        }
+
+        updateUI();
+    </script>
+</body>
+</html>
