@@ -34,7 +34,6 @@
             text-align: center;
             margin-bottom: 20px;
             color: #333;
-            font-size: 24px;
         }
         .player-btn {
             width: 100%;
@@ -46,10 +45,6 @@
             border-radius: 15px;
             cursor: pointer;
             color: white;
-            transition: transform 0.2s;
-        }
-        .player-btn:active {
-            transform: scale(0.95);
         }
         .youssef { background: #2196F3; }
         .ameni { background: #E91E63; }
@@ -84,10 +79,9 @@
             font-weight: bold;
             cursor: pointer;
             margin: 5px 0;
-            transition: background 0.2s;
         }
-        button:hover {
-            background: #45a049;
+        button:active {
+            transform: scale(0.98);
         }
         button:disabled {
             background: #ccc;
@@ -100,7 +94,6 @@
             border-radius: 15px;
             text-align: center;
             margin: 20px 0;
-            font-size: 18px;
         }
         .turn-box {
             background: #e8f5e9;
@@ -109,15 +102,13 @@
             margin: 15px 0;
             font-weight: bold;
             text-align: center;
-            font-size: 18px;
-            border: 2px solid #a5d6a7;
+            border: 2px solid #4CAF50;
         }
         .hidden { display: none; }
         .code-input {
             text-align: center;
             font-size: 28px;
             letter-spacing: 5px;
-            font-weight: bold;
         }
         .status {
             font-size: 14px;
@@ -132,7 +123,32 @@
             text-align: center;
             font-size: 24px;
             margin: 20px 0;
-            font-weight: bold;
+        }
+        .ping-indicator {
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+            margin: 5px 0;
+        }
+        .connected {
+            color: #4CAF50;
+        }
+        .disconnected {
+            color: #f44336;
+        }
+        .loader {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #4CAF50;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-left: 10px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -140,13 +156,16 @@
     <div class="game-box">
         <h1>🎮 YOUSSEF 🤝 AMENI</h1>
 
+        <!-- Connection Status -->
+        <div id="connectionStatus" class="ping-indicator">🔄 Connexion...</div>
+
         <!-- Room Code -->
         <div id="roomScreen">
             <div class="section">
                 <h3>🔑 CODE DE LA PARTIE</h3>
                 <input type="text" id="roomCode" class="code-input" placeholder="1234" value="1234" maxlength="4">
-                <button onclick="joinRoom()">REJOINDRE LA PARTIE</button>
-                <p class="status">Utilisez le même code sur les deux téléphones</p>
+                <button onclick="joinRoom()">REJOINDRE</button>
+                <p class="status">Même code sur les deux téléphones</p>
             </div>
         </div>
 
@@ -154,8 +173,8 @@
         <div id="playerScreen" class="hidden">
             <div class="section">
                 <h3>👤 QUI ÊTES-VOUS ?</h3>
-                <button class="player-btn youssef" onclick="setPlayer('youssef')">👨 YOUSSEF</button>
-                <button class="player-btn ameni" onclick="setPlayer('ameni')">👩 AMENI</button>
+                <button class="player-btn youssef" onclick="setPlayer('youssef')">YOUSSEF</button>
+                <button class="player-btn ameni" onclick="setPlayer('ameni')">AMENI</button>
             </div>
         </div>
 
@@ -163,12 +182,13 @@
         <div id="gameScreen" class="hidden">
             <div id="lockSection" class="section">
                 <h3 id="playerName"></h3>
-                <p>Choisissez votre nombre secret (1-100)</p>
+                <p>Choisissez votre nombre secret</p>
                 <input type="number" id="secretNumber" min="1" max="100" placeholder="1-100">
                 <button onclick="lockNumber()">🔒 VERROUILLER</button>
             </div>
 
             <div id="waitingSection" class="waiting hidden">
+                <div class="loader"></div>
                 ⏳ En attente de l'autre joueur...
             </div>
 
@@ -184,12 +204,11 @@
         </div>
 
         <div id="winnerDisplay" class="winner-box hidden"></div>
-        
         <button onclick="resetGame()" style="background: #f44336; margin-top: 20px;">🔄 NOUVELLE PARTIE</button>
     </div>
 
     <script>
-        // 🔥 CONFIGURATION FIREBASE 🔥
+        // Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyCrWG5PZpm3EGmQoFJofmECCNsnN8uMYc",
             authDomain: "youssef-ameni-game.firebaseapp.com",
@@ -204,6 +223,17 @@
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
+        // Enable offline persistence (reduce latency)
+        database.ref('.info/connected').on('value', (snap) => {
+            if (snap.val() === true) {
+                document.getElementById('connectionStatus').innerHTML = '✅ Connecté';
+                document.getElementById('connectionStatus').className = 'ping-indicator connected';
+            } else {
+                document.getElementById('connectionStatus').innerHTML = '❌ Déconnecté';
+                document.getElementById('connectionStatus').className = 'ping-indicator disconnected';
+            }
+        });
+
         // Game variables
         let currentPlayer = null;
         let roomCode = '1234';
@@ -212,6 +242,9 @@
         function joinRoom() {
             roomCode = document.getElementById('roomCode').value || '1234';
             gameRef = database.ref('games/' + roomCode);
+            
+            // Enable offline for this reference
+            gameRef.keepSynced(true);
             
             document.getElementById('roomScreen').classList.add('hidden');
             document.getElementById('playerScreen').classList.remove('hidden');
@@ -234,6 +267,19 @@
             document.getElementById('playerScreen').classList.add('hidden');
             document.getElementById('gameScreen').classList.remove('hidden');
             document.getElementById('playerName').innerHTML = player === 'youssef' ? '👨 YOUSSEF' : '👩 AMENI';
+            
+            // Initialize game if needed
+            gameRef.once('value', (snapshot) => {
+                if (!snapshot.val()) {
+                    gameRef.set({
+                        youssef: { locked: false, number: null },
+                        ameni: { locked: false, number: null },
+                        turn: 'youssef',
+                        winner: null,
+                        guesses: []
+                    });
+                }
+            });
         }
 
         function lockNumber() {
@@ -260,6 +306,10 @@
                 return;
             }
 
+            // Optimistic update (reduce perceived latency)
+            document.getElementById('guessBtn').disabled = true;
+            document.getElementById('turnDisplay').innerHTML = '⏳ ENVOI...';
+            
             gameRef.once('value', (snapshot) => {
                 let game = snapshot.val();
                 if (game.winner) return;
@@ -324,7 +374,7 @@
             // Show hint from last guess
             if (game.guesses && game.guesses.length > 0) {
                 let last = game.guesses[game.guesses.length - 1];
-                if (last.player === currentPlayer) {
+                if (last.player === currentPlayer && !game.winner) {
                     let target = currentPlayer === 'youssef' ? game.ameni.number : game.youssef.number;
                     let hint = last.guess < target ? '⬆️ PLUS HAUT' : '⬇️ PLUS BAS';
                     document.getElementById('hintDisplay').innerHTML = hint;
