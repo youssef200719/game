@@ -1,140 +1,132 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Youssef vs Ameni</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Youssef vs Ameni</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
-    <style>
-        *{margin:0;padding:0;box-sizing:border-box;}
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
 
-        body{
-            font-family:Arial;
-            background:linear-gradient(135deg,#667eea,#764ba2);
-            min-height:100vh;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            padding:15px;
-        }
+body{
+    font-family:Arial;
+    background:linear-gradient(135deg,#667eea,#764ba2);
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:15px;
+}
 
-        .container{
-            width:100%;
-            max-width:900px;
-            display:flex;
-            gap:15px;
-        }
+.container{
+    width:100%;
+    max-width:900px;
+    display:flex;
+    gap:15px;
+}
 
-        .game-box{
-            flex:2;
-            background:white;
-            border-radius:20px;
-            padding:25px;
-            box-shadow:0 10px 40px rgba(0,0,0,0.2);
-        }
+.game-box{
+    flex:2;
+    background:white;
+    border-radius:20px;
+    padding:25px;
+    box-shadow:0 10px 40px rgba(0,0,0,0.2);
+}
 
-        .history-box{
-            flex:1;
-            background:white;
-            border-radius:20px;
-            padding:15px;
-            max-height:500px;
-            overflow-y:auto;
-            box-shadow:0 10px 40px rgba(0,0,0,0.2);
-        }
+.history-box{
+    flex:1;
+    background:white;
+    border-radius:20px;
+    padding:15px;
+    max-height:500px;
+    overflow-y:auto;
+    box-shadow:0 10px 40px rgba(0,0,0,0.2);
+}
 
-        @media(max-width:768px){
-            .container{
-                flex-direction:column;
-            }
-            .history-box{
-                max-height:200px;
-            }
-        }
+@media(max-width:768px){
+    .container{flex-direction:column;}
+    .history-box{max-height:200px;}
+}
 
-        h1{text-align:center;margin-bottom:20px;}
+h1{text-align:center;margin-bottom:20px;}
 
-        .player-btn{
-            width:100%;
-            padding:20px;
-            margin:10px 0;
-            font-size:20px;
-            font-weight:bold;
-            border:none;
-            border-radius:15px;
-            cursor:pointer;
-            color:white;
-        }
+.player-btn{
+    width:100%;
+    padding:20px;
+    margin:10px 0;
+    font-size:20px;
+    font-weight:bold;
+    border:none;
+    border-radius:15px;
+    cursor:pointer;
+    color:white;
+}
 
-        .youssef{background:#2196F3;}
-        .ameni{background:#E91E63;}
+.youssef{background:#2196F3;}
+.ameni{background:#E91E63;}
 
-        .section{
-            background:#f8f9fa;
-            border:2px solid #ddd;
-            border-radius:15px;
-            padding:20px;
-            margin:15px 0;
-        }
+.section{
+    background:#f8f9fa;
+    border:2px solid #ddd;
+    border-radius:15px;
+    padding:20px;
+    margin:15px 0;
+}
 
-        input{
-            width:100%;
-            padding:15px;
-            font-size:18px;
-            text-align:center;
-            border:2px solid #ddd;
-            border-radius:10px;
-            margin:10px 0;
-        }
+input{
+    width:100%;
+    padding:15px;
+    font-size:18px;
+    text-align:center;
+    border:2px solid #ddd;
+    border-radius:10px;
+    margin:10px 0;
+}
 
-        button{
-            width:100%;
-            padding:15px;
-            background:#4CAF50;
-            color:white;
-            border:none;
-            border-radius:10px;
-            font-size:16px;
-            font-weight:bold;
-            cursor:pointer;
-            margin:5px 0;
-        }
+button{
+    width:100%;
+    padding:15px;
+    background:#4CAF50;
+    color:white;
+    border:none;
+    border-radius:10px;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+    margin:5px 0;
+}
 
-        button:disabled{
-            background:#ccc;
-            cursor:not-allowed;
-        }
+button:disabled{background:#ccc;cursor:not-allowed;}
 
-        .waiting{
-            background:#fff3cd;
-            padding:20px;
-            border-radius:15px;
-            text-align:center;
-        }
+.waiting{
+    background:#fff3cd;
+    padding:20px;
+    border-radius:15px;
+    text-align:center;
+}
 
-        .hidden{display:none;}
+.turn-box{
+    background:#e8f5e9;
+    padding:15px;
+    border-radius:10px;
+    text-align:center;
+    font-weight:bold;
+    margin:10px 0;
+}
 
-        .turn-box{
-            background:#e8f5e9;
-            padding:15px;
-            border-radius:10px;
-            text-align:center;
-            font-weight:bold;
-            margin:10px 0;
-        }
+.hidden{display:none;}
 
-        .history-item{
-            padding:8px;
-            border-bottom:1px solid #eee;
-            font-size:14px;
-        }
+.history-item{
+    padding:8px;
+    border-bottom:1px solid #eee;
+    font-size:14px;
+}
 
-        .status{text-align:center;margin-top:10px;}
-    </style>
+.status{text-align:center;margin-top:10px;}
+</style>
 </head>
 
 <body>
@@ -145,202 +137,196 @@
 <h1>YOUSSEF VS AMENI</h1>
 
 <div id="playerScreen">
-    <div class="section">
-        <h3>WHO ARE YOU?</h3>
-        <button class="player-btn youssef" onclick="setPlayer('youssef')">YOUSSEF</button>
-        <button class="player-btn ameni" onclick="setPlayer('ameni')">AMENI</button>
-    </div>
+<div class="section">
+<h3>WHO ARE YOU?</h3>
+<button class="player-btn youssef" onclick="setPlayer('youssef')">YOUSSEF</button>
+<button class="player-btn ameni" onclick="setPlayer('ameni')">AMENI</button>
+</div>
 </div>
 
 <div id="gameScreen" class="hidden">
-    <div id="lockSection" class="section">
-        <h3 id="playerName"></h3>
-        <p>Choose your secret number (1-100)</p>
-        <input type="number" id="secretNumber" min="1" max="100">
-        <button onclick="lockNumber()">LOCK NUMBER</button>
-    </div>
 
-    <div id="waitingSection" class="waiting hidden"></div>
+<div id="lockSection" class="section">
+<h3 id="playerName"></h3>
+<p>Choose your secret number (1-100)</p>
+<input type="number" id="secretNumber" min="1" max="100">
+<button onclick="lockNumber()">LOCK NUMBER</button>
+</div>
 
-    <div id="playSection" class="hidden">
-        <div class="turn-box" id="turnDisplay"></div>
+<div id="waitingSection" class="waiting hidden"></div>
 
-        <div class="section">
-            <h3 id="guessTitle"></h3>
-            <input type="number" id="guessNumber" min="1" max="100">
-            <button onclick="makeGuess()" id="guessBtn" disabled>GUESS</button>
-        </div>
-    </div>
+<div id="playSection" class="hidden">
+<div class="turn-box" id="turnDisplay"></div>
+
+<div class="section">
+<h3 id="guessTitle"></h3>
+<input type="number" id="guessNumber" min="1" max="100">
+<button onclick="makeGuess()" id="guessBtn" disabled>GUESS</button>
+</div>
+</div>
+
 </div>
 
 <div id="winnerDisplay" class="waiting hidden"></div>
 <div id="connectionStatus" class="status"></div>
 <button onclick="resetGame()" style="background:#f44336;margin-top:20px;">NEW GAME</button>
-
 </div>
 
 <div class="history-box">
-    <h3>History</h3>
-    <div id="historyList"></div>
+<h3>History</h3>
+<div id="historyList"></div>
 </div>
 
 </div>
 
 <script>
 const firebaseConfig = {
-  apiKey: "AIzaSyCrWG5PZpMSEGhmqoFJofmECCSnN8uMYc",
-  authDomain: "youssef-ameni-game.firebaseapp.com",
-  databaseURL: "https://youssef-ameni-game-default-rtdb.firebaseio.com",
-  projectId: "youssef-ameni-game",
-  storageBucket: "youssef-ameni-game.firebasestorage.app",
-  messagingSenderId: "238776242009",
-  appId: "1:238776242009:web:a34003b6e60f1d1e0ec648"
+apiKey:"AIzaSyCrWG5PZpMSEGhmqoFJofmECCSnN8uMYc",
+authDomain:"youssef-ameni-game.firebaseapp.com",
+databaseURL:"https://youssef-ameni-game-default-rtdb.firebaseio.com",
+projectId:"youssef-ameni-game",
+storageBucket:"youssef-ameni-game.firebasestorage.app",
+messagingSenderId:"238776242009",
+appId:"1:238776242009:web:a34003b6e60f1d1e0ec648"
 };
 
 firebase.initializeApp(firebaseConfig);
-const database = firebase.database();
-const gameRef = database.ref("games/game123");
+const database=firebase.database();
+const gameRef=database.ref("games/game123");
 
 let currentPlayer=null;
 let winnerShown=false;
 
 database.ref(".info/connected").on("value",(snap)=>{
-    document.getElementById("connectionStatus").innerHTML =
-        snap.val() ? "Connected" : "Connecting...";
+document.getElementById("connectionStatus").innerHTML=
+snap.val()?"Connected":"Connecting...";
 });
 
 gameRef.on("value",(snapshot)=>{
-    const game=snapshot.val();
-    if(game) updateUI(game);
+const game=snapshot.val();
+if(game) updateUI(game);
 });
 
 function setPlayer(player){
-    currentPlayer=player;
-    document.getElementById("playerScreen").classList.add("hidden");
-    document.getElementById("gameScreen").classList.remove("hidden");
-    document.getElementById("playerName").innerHTML=player.toUpperCase();
+currentPlayer=player;
+document.getElementById("playerScreen").classList.add("hidden");
+document.getElementById("gameScreen").classList.remove("hidden");
+document.getElementById("playerName").innerHTML=player.toUpperCase();
 
-    gameRef.once("value",(snap)=>{
-        if(!snap.val()){
-            gameRef.set({
-                youssef:{locked:false,number:null},
-                ameni:{locked:false,number:null},
-                turn:"youssef",
-                winner:null,
-                guesses:[]
-            });
-        }
-    });
+gameRef.once("value",(snap)=>{
+if(!snap.val()){
+gameRef.set({
+youssef:{locked:false,number:null},
+ameni:{locked:false,number:null},
+turn:"youssef",
+winner:null,
+guesses:[]
+});
+}
+});
 }
 
 function lockNumber(){
-    const num=parseInt(document.getElementById("secretNumber").value);
-    if(num<1||num>100) return alert("Number must be 1-100");
+const num=parseInt(document.getElementById("secretNumber").value);
+if(num<1||num>100)return alert("Number must be 1-100");
 
-    let updates={};
-    updates[currentPlayer+"/locked"]=true;
-    updates[currentPlayer+"/number"]=num;
-    gameRef.update(updates);
+let updates={};
+updates[currentPlayer+"/locked"]=true;
+updates[currentPlayer+"/number"]=num;
+gameRef.update(updates);
 }
 
 function makeGuess(){
-    const guess=parseInt(document.getElementById("guessNumber").value);
-    if(guess<1||guess>100) return alert("Number must be 1-100");
+const guess=parseInt(document.getElementById("guessNumber").value);
+if(guess<1||guess>100)return alert("Number must be 1-100");
 
-    gameRef.once("value",(snap)=>{
-        const game=snap.val();
-        if(game.winner) return;
+gameRef.once("value",(snap)=>{
+const game=snap.val();
+if(game.winner)return;
 
-        const other=currentPlayer==="youssef"?"ameni":"youssef";
-        const target=game[other].number;
+const other=currentPlayer==="youssef"?"ameni":"youssef";
+const target=game[other].number;
 
-        let guesses=game.guesses||[];
-        let result="";
+let guesses=game.guesses||[];
+let result="";
 
-        if(guess<target) result="Higher";
-        else if(guess>target) result="Lower";
-        else result="Correct";
+if(guess<target)result="Higher";
+else if(guess>target)result="Lower";
+else result="Correct";
 
-        guesses.push({
-            player:currentPlayer,
-            guess:guess,
-            result:result
-        });
+guesses.push({player:currentPlayer,guess:guess,result:result});
+let updates={guesses:guesses};
 
-        let updates={guesses:guesses};
+if(result==="Correct")updates.winner=currentPlayer;
+else updates.turn=other;
 
-        if(result==="Correct"){
-            updates.winner=currentPlayer;
-        }else{
-            updates.turn=other;
-        }
-
-        gameRef.update(updates);
-        document.getElementById("guessNumber").value="";
-    });
+gameRef.update(updates);
+document.getElementById("guessNumber").value="";
+});
 }
 
 function updateUI(game){
-    if(!currentPlayer) return;
+if(!currentPlayer)return;
 
-    const other=currentPlayer==="youssef"?"ameni":"youssef";
+const other=currentPlayer==="youssef"?"ameni":"youssef";
 
-    if(!game[currentPlayer].locked){
-        return;
-    }
+if(!game[currentPlayer].locked)return;
 
-    if(!game[other].locked){
-        document.getElementById("waitingSection").innerHTML="WAITING FOR "+other.toUpperCase()+"...";
-        document.getElementById("waitingSection").classList.remove("hidden");
-        return;
-    }
+if(!game[other].locked){
+document.getElementById("waitingSection").innerHTML="WAITING FOR "+other.toUpperCase()+"...";
+document.getElementById("waitingSection").classList.remove("hidden");
+return;
+}
 
-    document.getElementById("waitingSection").classList.add("hidden");
-    document.getElementById("playSection").classList.remove("hidden");
+document.getElementById("waitingSection").classList.add("hidden");
+document.getElementById("playSection").classList.remove("hidden");
 
-    document.getElementById("guessTitle").innerHTML=
-        "Guess "+other.toUpperCase()+"'s number";
+document.getElementById("guessTitle").innerHTML="Guess "+other.toUpperCase()+"'s number";
 
-    if(game.winner){
-        document.getElementById("turnDisplay").innerHTML="GAME OVER";
-        document.getElementById("guessBtn").disabled=true;
-        document.getElementById("winnerDisplay").innerHTML=
-            game.winner.toUpperCase()+" WINS!";
-        document.getElementById("winnerDisplay").classList.remove("hidden");
+if(game.winner){
+document.getElementById("turnDisplay").innerHTML="GAME OVER";
+document.getElementById("guessBtn").disabled=true;
 
-        if(!winnerShown){
-            alert(game.winner.toUpperCase()+" won");
-            winnerShown=true;
-        }
-        return;
-    }
+const yNum=game.youssef.number;
+const aNum=game.ameni.number;
 
-    if(game.turn===currentPlayer){
-        document.getElementById("turnDisplay").innerHTML="YOUR TURN";
-        document.getElementById("guessBtn").disabled=false;
-    }else{
-        document.getElementById("turnDisplay").innerHTML=
-            "WAITING FOR "+other.toUpperCase()+"...";
-        document.getElementById("guessBtn").disabled=true;
-    }
+document.getElementById("winnerDisplay").innerHTML=
+game.winner.toUpperCase()+" WINS!<br><br>"+
+"Youssef chose: "+yNum+"<br>"+
+"Ameni chose: "+aNum;
 
-    const historyList=document.getElementById("historyList");
-    historyList.innerHTML="";
-    if(game.guesses){
-        game.guesses.forEach(g=>{
-            let div=document.createElement("div");
-            div.className="history-item";
-            div.innerHTML=
-                g.player.toUpperCase()+" guessed "+
-                g.guess+" → "+g.result;
-            historyList.appendChild(div);
-        });
-    }
+document.getElementById("winnerDisplay").classList.remove("hidden");
+
+if(!winnerShown){
+alert(game.winner.toUpperCase()+" won\nYoussef chose: "+yNum+"\nAmeni chose: "+aNum);
+winnerShown=true;
+}
+return;
+}
+
+if(game.turn===currentPlayer){
+document.getElementById("turnDisplay").innerHTML="YOUR TURN";
+document.getElementById("guessBtn").disabled=false;
+}else{
+document.getElementById("turnDisplay").innerHTML="WAITING FOR "+other.toUpperCase()+"...";
+document.getElementById("guessBtn").disabled=true;
+}
+
+const historyList=document.getElementById("historyList");
+historyList.innerHTML="";
+if(game.guesses){
+game.guesses.forEach(g=>{
+let div=document.createElement("div");
+div.className="history-item";
+div.innerHTML=g.player.toUpperCase()+" guessed "+g.guess+" → "+g.result;
+historyList.appendChild(div);
+});
+}
 }
 
 function resetGame(){
-    gameRef.remove();
-    location.reload();
+gameRef.remove();
+location.reload();
 }
 </script>
 
